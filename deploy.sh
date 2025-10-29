@@ -6,6 +6,6 @@ docker run -d \
   --name fastapi-container \
   -p 8000:8000 \
   --env-file ~/Documents/api_project/.env \
-  -v ~/Documents/api_project/api_log.txt:/app/api_log.txt \
   -v /sys/class/thermal:/sys/class/thermal:ro \
+  -v ~/Documents/api_project/data.db:/app/data.db \
   my-fastapi-app
