@@ -1,10 +1,27 @@
-from fastapi import FastAPI, Security, HTTPException
+from fastapi import FastAPI, Security, HTTPException, Request
 from fastapi.security import APIKeyHeader
 import subprocess
 import os
+import logging
 from database import init_db, add_reading, get_recent_readings
 
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+
 app = FastAPI()
+
+# Log all incoming requests
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"{request.method} {request.url.path} - Client: {request.client.host}")
+    response = await call_next(request)
+    logger.info(f"Response status: {response.status_code}")
+    return response
 
 # Initialize DB on startup
 @app.on_event("startup")
