@@ -22,8 +22,8 @@ try:
             f = round(temperature * 9/5 + 32, 1)
             h = round(humidity, 1)
             print(f"SUCCESS - Temp: {f}°F | Humidity: {h}%")
-            add_reading("AM2302 °F", f)
-            add_reading("AM2302 %H", h)
+            add_reading("am2302_temperature", f)
+            add_reading("am2302_humidity", h)
         else:
             print("FAILED - No data returned from sensor")
 

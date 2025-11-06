@@ -61,6 +61,12 @@ def get_temp_history(limit: int = 10):
     readings = get_recent_readings("temperature", limit)
     return {"readings": readings}
 
+@app.get("/am2302/temperature")
+def get_am2302_temperature(limit: int = 1):
+    readings = get_recent_readings("am2302_temperature", limit)
+    return {"temperature_farenheit", readings}
+    
+
 @app.post("/log")
 def log_message(message: str, api_key: str = Security(verify_api_key)):
     add_reading("log_message", 0.0)  # We'll improve this later
