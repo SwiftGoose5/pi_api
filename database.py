@@ -52,7 +52,7 @@ def get_single_reading(sensor_type: str):
         SELECT sensor_type, value, timestamp
         FROM sensor_readings
         WHERE sensor_type = ?
-        ORDER BY timestamp DESC
+        ORDER BY id DESC
         LIMIT ?
     """, (sensor_type, limit))
     
@@ -73,7 +73,7 @@ def get_recent_readings(sensor_type: str, limit: int = 10) -> list[dict]:
         SELECT value, timestamp
         FROM sensor_readings
         WHERE sensor_type = ?
-        ORDER BY timestamp DESC
+        ORDER BY id DESC
         LIMIT ?
     """, (sensor_type, limit))
     

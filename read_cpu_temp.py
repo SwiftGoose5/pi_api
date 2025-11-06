@@ -43,4 +43,6 @@ if __name__ == "__main__":
             add_reading("cpu_temperature", temp_f)
         except Exception as e:
             print(f"Error: {e}")
+            import traceback
+            traceback.print_exc()
         time.sleep(INTERVAL)
