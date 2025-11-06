@@ -21,7 +21,8 @@ def wait_for_db(timeout=60):
                 conn.close()
                 print("Database ready.")
                 return True
-            except sqlite3.OperationalError:
+            except sqlite3.OperationalError as e:
+                print(f"DB connect error: {e}")  # ADD THIS LINE
                 pass
         time.sleep(1)
     print("Timeout: Database not available.")
