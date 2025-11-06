@@ -3,7 +3,7 @@ import time
 import sqlite3
 from database import add_reading
 
-DB_PATH = "/home/elliot/Documents/api_project/data.db"
+DB_PATH = "/app/data.db"
 INTERVAL = 60  # seconds
 
 # Test database connection first

@@ -12,7 +12,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 app = FastAPI()
 
 # Log all incoming requests
