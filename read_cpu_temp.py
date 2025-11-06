@@ -1,3 +1,4 @@
+import os
 import time
 import sqlite3
 from database import add_reading
