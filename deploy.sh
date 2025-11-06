@@ -8,5 +8,5 @@ docker run -d \
   --restart unless-stopped \
   -p 8000:8000 \
   --env-file ~/Documents/api_project/.env \
-  -v ~/Documents/api_project/data.db:/app/data.db \
+  -v ~/Documents/api_project:/app \
   my-fastapi-app
