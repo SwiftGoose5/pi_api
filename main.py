@@ -39,16 +39,6 @@ def verify_api_key(key: str = Security(api_key_header)):
         raise HTTPException(status_code=403, detail="Invalid API key")
     return key
 
-@app.get("/temperature")
-def get_temp():
-    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
-        temp_millidegrees = int(f.read().strip())
-    temp_celsius = temp_millidegrees / 1000.0
-    
-    add_reading("temperature", temp_celsius)
-    
-    return {"temperature_celsius": temp_celsius}
-
 @app.get("/uptime")
 def get_uptime():
     result = subprocess.run(['uptime', '-p'], capture_output=True, text=True)
@@ -56,10 +46,31 @@ def get_uptime():
     temp_value = temp_str.split('up')[1]
     return {"uptime": temp_value}
 
-@app.get("/temperature/history")
-def get_temp_history(limit: int = 10):
-    readings = get_recent_readings("temperature", limit)
-    return {"readings": readings}
+@app.get("/cpu-temperature")
+def get_cpu_temperature():
+    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        temp_millidegrees = int(f.read().strip())
+    temp_celsius = temp_millidegrees / 1000.0
+    temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
+
+    add_reading("cpu_temperature", temp_fahrenheit)  # Store in °F
+
+    return {"cpu_temperature_f": temp_fahrenheit}
+
+
+@app.get("/cpu-temperature/history")
+def get_cpu_temperature_history(limit: int = 10):
+    if limit < 1 or limit > 100:
+        limit = 10
+
+    readings = get_recent_readings("cpu_temperature", limit)
+
+    return {
+        "sensor": "cpu_temperature",
+        "unit": "°F",
+        "count": len(readings),
+        "readings": readings
+    }
 
 @app.get("/am2302/temperature/")
 def get_am2302_temperature():
