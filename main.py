@@ -3,7 +3,7 @@ from fastapi.security import APIKeyHeader
 import subprocess
 import os
 import logging
-from database import init_db, add_reading, get_recent_readings
+from database import init_db, add_reading, get_single_reading, get_recent_readings
 
 # Set up logging
 logging.basicConfig(
@@ -61,10 +61,22 @@ def get_temp_history(limit: int = 10):
     readings = get_recent_readings("temperature", limit)
     return {"readings": readings}
 
-@app.get("/am2302/temperature")
-def get_am2302_temperature(limit: int = 1):
+@app.get("/am2302/temperature/")
+def get_am2302_temperature():
+    reading = get_single_reading("am2302_temperature")
+    if not reading:
+        return {"error": "No temperature reading found"}
+    
+    return {
+        "sensor": reading["sensor"],
+        "temperature_f": reading["value"],
+        "timestamp": reading["timestamp"]
+    }
+
+@app.get("/am2302/temperature/history")
+def get_am2302_temperature(limit: int = 10):
     readings = get_recent_readings("am2302_temperature", limit)
-    return {"temperature_farenheit", readings}
+    return {"readings", readings}
     
 
 @app.post("/log")

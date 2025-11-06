@@ -35,6 +35,29 @@ def add_reading(sensor_type: str, value: float):
     conn.commit()
     conn.close()
 
+def get_single_reading(sensor_type: str):
+    """Get single reading for a sensor"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    limit = 1
+    
+    cursor.execute("""
+        SELECT sensor_type, value, timestamp
+        FROM sensor_readings
+        WHERE sensor_type = ?
+        ORDER BY timestamp DESC
+        LIMIT ?
+    """, (sensor_type, limit))
+    
+    row = cursor.fetchone()
+    conn.close()
+    
+    if row:
+        return {"sensor": row[0], "value": row[1], "timestamp": row[2]}
+    else:
+        return None
+
 def get_recent_readings(sensor_type: str, limit: int = 10):
     """Get recent readings for a sensor"""
     conn = sqlite3.connect(DB_PATH)
