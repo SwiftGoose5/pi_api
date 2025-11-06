@@ -1,9 +1,7 @@
 import sqlite3
 from datetime import datetime
-import pytz
 
 DB_PATH = "data.db"
-local_tz = pytz.timezone("America/New_York")
 
 def init_db():
     """Create tables if they don't exist"""
@@ -29,9 +27,7 @@ def add_reading(sensor_type: str, value: float):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Use LOCAL time
-    local_time = datetime.now(local_tz)
-    timestamp = local_time.strftime("%Y-%m-%dT%H:%M:%S.%f")
+    timestamp = datetime.now().isoformat()
     
     cursor.execute("""
         INSERT INTO sensor_readings (sensor_type, value, timestamp)
