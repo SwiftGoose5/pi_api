@@ -74,10 +74,18 @@ def get_am2302_temperature():
     }
 
 @app.get("/am2302/temperature/history")
-def get_am2302_temperature(limit: int = 10):
+def get_am2302_temperature_history(limit: int = 10):
+    if limit < 1 or limit > 100:
+        limit = 10  # clamp to safe range
+
     readings = get_recent_readings("am2302_temperature", limit)
-    return {"readings", readings}
     
+    return {
+        "sensor": "am2302_temperature",
+        "unit": "°F",
+        "count": len(readings),
+        "readings": readings
+    }
 
 @app.post("/log")
 def log_message(message: str, api_key: str = Security(verify_api_key)):

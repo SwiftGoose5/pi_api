@@ -58,13 +58,13 @@ def get_single_reading(sensor_type: str):
     else:
         return None
 
-def get_recent_readings(sensor_type: str, limit: int = 10):
-    """Get recent readings for a sensor"""
+def get_recent_readings(sensor_type: str, limit: int = 10) -> list[dict]:
+    """Get recent readings for a sensor (latest first)"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     cursor.execute("""
-        SELECT sensor_type, value, timestamp
+        SELECT value, timestamp
         FROM sensor_readings
         WHERE sensor_type = ?
         ORDER BY timestamp DESC
@@ -74,7 +74,10 @@ def get_recent_readings(sensor_type: str, limit: int = 10):
     results = cursor.fetchall()
     conn.close()
     
-    return [{"sensor": r[0], "value": r[1], "timestamp": r[2]} for r in results]
+    return [
+        {"value": round(r[0], 1), "timestamp": r[1]}
+        for r in results
+    ]
 
 if __name__ == "__main__":
     init_db()
