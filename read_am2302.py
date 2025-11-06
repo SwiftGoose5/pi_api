@@ -8,7 +8,7 @@ from database import add_reading
 SENSOR = Adafruit_DHT.AM2302
 PIN = 17
 
-DB_PATH = "/home/pi/Documents/api_project/data.db"
+DB_PATH = "/home/elliot/Documents/api_project/data.db"
 INTERVAL = 60  # seconds
 
 # Test database connection first
