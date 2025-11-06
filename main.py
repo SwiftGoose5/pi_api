@@ -26,7 +26,12 @@ async def log_requests(request: Request, call_next):
 # Initialize DB on startup
 @app.on_event("startup")
 def startup():
-    init_db()
+    # This runs when Docker container starts
+    if not os.path.exists("/app/data.db"):
+        print("Database not found — initializing...")
+        init_db()  # creates table + schema
+    else:
+        print("Database found — ready to serve.")
 
 API_KEY = os.getenv("API_KEY")
 if not API_KEY:
@@ -48,15 +53,14 @@ def get_uptime():
 
 @app.get("/cpu-temperature")
 def get_cpu_temperature():
-    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
-        temp_millidegrees = int(f.read().strip())
-    temp_celsius = temp_millidegrees / 1000.0
-    temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
+    reading = get_single_reading("cpu_temperature")
 
-    add_reading("cpu_temperature", temp_fahrenheit)  # Store in °F
-
-    return {"cpu_temperature_f": temp_fahrenheit}
-
+    if not reading:
+        return {"error": "No CPU temperature reading"}
+    return {
+        "cpu_temperature_f": reading["value"],
+        "timestamp": reading["timestamp"]
+    }
 
 @app.get("/cpu-temperature/history")
 def get_cpu_temperature_history(limit: int = 10):

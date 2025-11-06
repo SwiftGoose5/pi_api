@@ -1,0 +1,44 @@
+import time
+import sqlite3
+from database import add_reading
+
+DB_PATH = "/home/pi/Documents/api_project/data.db"
+INTERVAL = 60  # seconds
+
+# Test database connection first
+def wait_for_db(timeout=60):
+    print("Waiting for database to be initialized...")
+    for _ in range(timeout):
+        if os.path.exists(DB_PATH):
+            try:
+                conn = sqlite3.connect(DB_PATH, timeout=1.0)
+                conn.close()
+                print("Database ready.")
+                return True
+            except sqlite3.OperationalError:
+                pass
+        time.sleep(1)
+    print("Timeout: Database not available.")
+    return False
+
+# At start of script
+if not wait_for_db():
+    exit(1)
+
+def get_cpu_temp_f():
+    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        temp_millidegrees = int(f.read().strip())
+    temp_c = temp_millidegrees / 1000.0
+    temp_f = round(temp_c * 9/5 + 32, 1)
+    return temp_f
+
+if __name__ == "__main__":
+    print("Starting CPU temperature logger...")
+    while True:
+        try:
+            temp_f = get_cpu_temp_f()
+            print(f"CPU Temp: {temp_f}°F")
+            add_reading("cpu_temperature", temp_f)
+        except Exception as e:
+            print(f"Error: {e}")
+        time.sleep(INTERVAL)
