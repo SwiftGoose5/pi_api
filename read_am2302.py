@@ -1,5 +1,6 @@
 import time
 import Adafruit_DHT
+from database import init_db, add_reading
 
 # Sensor setup
 SENSOR = Adafruit_DHT.AM2302
@@ -15,7 +16,11 @@ try:
         humidity, temperature = Adafruit_DHT.read_retry(SENSOR, PIN, retries=15, delay_seconds=INTERVAL)
 
         if humidity is not None and temperature is not None:
-            print(f"SUCCESS - Temp: {temperature:.1f}°C | Humidity: {humidity:.1f}%")
+            f = round(temperature * 9/5 + 32, 1)
+            h = round(humidity, 1)
+            print(f"SUCCESS - Temp: {f}°F | Humidity: {h}%")
+            add_reading("AM2302 °F", f)
+            add_reading("AM2302 %H", h)
         else:
             print("FAILED - No data returned from sensor")
 
