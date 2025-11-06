@@ -24,8 +24,8 @@ def wait_for_db(timeout=60):
     return False
 
 # At start of script
-if not wait_for_db():
-    exit(1)
+# if not wait_for_db():
+#     exit(1)
 
 def get_cpu_temp_f():
     with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
