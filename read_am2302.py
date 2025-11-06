@@ -2,6 +2,9 @@ import time
 import Adafruit_DHT
 from database import init_db, add_reading
 
+# Initialize DB on startup
+init_db()
+
 # Sensor setup
 SENSOR = Adafruit_DHT.AM2302
 PIN = 17
