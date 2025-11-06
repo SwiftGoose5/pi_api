@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 import pytz
 
-DB_PATH = "/app/data.db"
+DB_PATH = "/home/elliot/Documents/api_project/data.db"
 local_tz = pytz.timezone("America/New_York")
 
 def init_db():

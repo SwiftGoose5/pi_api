@@ -8,7 +8,7 @@ from database import add_reading
 SENSOR = Adafruit_DHT.AM2302
 PIN = 17
 
-DB_PATH = "/app/data.db"
+DB_PATH = "/home/elliot/Documents/api_project/data.db"
 INTERVAL = 60  # seconds
 
 # Test database connection first
@@ -22,7 +22,7 @@ def wait_for_db(timeout=60):
                 print("Database ready.")
                 return True
             except sqlite3.OperationalError as e:
-                print(f"DB connect error: {e}")  # ADD THIS LINE
+                print(f"DB connect error: {e}")
                 pass
         time.sleep(1)
     print("Timeout: Database not available.")
