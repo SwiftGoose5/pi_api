@@ -141,6 +141,25 @@ def get_am2302_humidity():
         "timestamp": reading["timestamp"]
     }
 
+@app.get("/am2302/humidity/history")
+def get_am2302_humidity_history(limit: int = 10):
+    unit: str = "humidity"
+
+    if limit < 1 or limit > 100:
+        limit = 10  # clamp to safe range
+
+    readings = get_readings("am2302_humidity", unit, limit)
+
+    if not readings:
+        return {"error": "No humidity readings found"}
+    
+    return {
+        "sensor": "am2302_humidity",
+        "unit": "%",
+        "count": len(readings),
+        "readings": readings
+    }
+
 @app.post("/log")
 def log_message(message: str, api_key: str = Security(verify_api_key)):
     add_reading("log_message", 0.0)  # We'll improve this later

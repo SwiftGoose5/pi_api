@@ -76,6 +76,12 @@ def get_readings(sensor_type: str, unit: str = "f", limit: int = 10) -> list[dic
     results = cursor.fetchall()
     conn.close()
 
+    if unit == "humidity":
+        return [
+            {"value": r[0], "timestamp": r[1]}
+            for r in results
+        ]
+
     if unit == "f":
         return [
             {"value": round(r[0] * 9/5 + 32, 1), "timestamp": r[1]}
