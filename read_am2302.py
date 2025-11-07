@@ -32,22 +32,24 @@ def wait_for_db(timeout=60):
 if not wait_for_db():
     exit(1)
 
-print("Starting AM2302 sensor readings...")
-print(f"Sensor type: AM2302, Pin: GPIO{PIN}")
-
-try:
+if __name__ == "__main__":
+    print("Starting AM2302 sensor readings...")
+    print(f"Sensor type: AM2302, Pin: GPIO{PIN}")
     while True:
-        print("Attempting to read sensor...")
-        humidity, temperature = Adafruit_DHT.read_retry(SENSOR, PIN, retries=15, delay_seconds=INTERVAL)
+        try:
+            print("Attempting to read sensor...")
+            humidity, temperature = Adafruit_DHT.read_retry(SENSOR, PIN, retries=15, delay_seconds=INTERVAL)
 
-        if humidity is not None and temperature is not None:
-            temp_c = round(temperature, 1)
-            hum = round(humidity, 1)
-            print(f"SUCCESS - Temp: {temp_c}°C | Humidity: {hum}%")
-            add_reading("am2302_temperature", temp_c)
-            add_reading("am2302_humidity", hum)
-        else:
-            print("FAILED - No data returned from sensor")
-
+            if humidity is not None and temperature is not None:
+                temp_c = round(temperature, 1)
+                hum = round(humidity, 1)
+                print(f"SUCCESS - Temp: {temp_c}°C | Humidity: {hum}%")
+                add_reading("am2302_temperature", temp_c)
+                add_reading("am2302_humidity", hum)
+            else:
+                print("FAILED - No data returned from sensor")
+        except Exception as e:
+            print(f"Error: {e}")
+            import traceback
+            traceback.print_exc()
         time.sleep(INTERVAL)
-
