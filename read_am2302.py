@@ -9,7 +9,7 @@ SENSOR = Adafruit_DHT.AM2302
 PIN = 17
 
 DB_PATH = "/home/elliot/Documents/api_project/data.db"
-INTERVAL = 60  # seconds
+INTERVAL = 60
 
 # Test database connection first
 def wait_for_db(timeout=60):
@@ -29,8 +29,8 @@ def wait_for_db(timeout=60):
     return False
 
 # At start of script
-# if not wait_for_db():
-#     exit(1)
+if not wait_for_db():
+    exit(1)
 
 print("Starting AM2302 sensor readings...")
 print(f"Sensor type: AM2302, Pin: GPIO{PIN}")
