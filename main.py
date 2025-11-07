@@ -56,9 +56,13 @@ def get_cpu_temperature():
 
     if not reading:
         return {"error": "No CPU temperature reading"}
+    
+    c = reading["value"]
+    f = round(c * 9/5 + 32, 1)
+
     return {
-        "cpu_temperature_c": reading["value"],
-        "cpu_temperature_f": reading["value"] * 9/5 + 32,
+        "cpu_temperature_c": c,
+        "cpu_temperature_f": f,
         "timestamp": reading["timestamp"]
     }
 
@@ -73,6 +77,9 @@ def get_cpu_temperature_history(unit: str = "f", limit: int = 10):
 
     readings = get_readings("cpu_temperature", unit, limit)
 
+    if not readings:
+        return {"error": "No temperature readings found"}
+
     return {
         "sensor": "cpu_temperature",
         "unit": "°C" if unit == "c" else "°F",
@@ -83,13 +90,17 @@ def get_cpu_temperature_history(unit: str = "f", limit: int = 10):
 @app.get("/am2302/temperature/")
 def get_am2302_temperature():
     reading = get_latest_reading("am2302_temperature")
+
     if not reading:
         return {"error": "No temperature reading found"}
     
+    c = reading["value"]
+    f = round(c * 9/5 + 32, 1)
+    
     return {
         "sensor": reading["sensor"],
-        "temperature_c": reading["value"],
-        "temperature_f": reading["value"] * 9/5 + 32,
+        "temperature_c": c,
+        "temperature_f": f,
         "timestamp": reading["timestamp"]
     }
 
@@ -103,6 +114,9 @@ def get_am2302_temperature_history(unit: str = "f", limit: int = 10):
         limit = 10  # clamp to safe range
 
     readings = get_readings("am2302_temperature", unit, limit)
+
+    if not readings:
+        return {"error": "No temperature readings found"}
     
     return {
         "sensor": "am2302_temperature",

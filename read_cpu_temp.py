@@ -27,7 +27,7 @@ def wait_for_db(timeout=60):
 if not wait_for_db():
     exit(1)
 
-def get_cpu_temp_f():
+def get_cpu_temp_c():
     with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
         temp_millidegrees = int(f.read().strip())
     temp_c = temp_millidegrees / 1000.0
@@ -37,9 +37,9 @@ if __name__ == "__main__":
     print("Starting CPU temperature logger...")
     while True:
         try:
-            temp_f = get_cpu_temp_f()
-            print(f"CPU Temp: {temp_f}°F")
-            add_reading("cpu_temperature", temp_f)
+            temp_c = get_cpu_temp_c()
+            print(f"CPU Temp: {temp_c}°C")
+            add_reading("cpu_temperature", temp_c)
         except Exception as e:
             print(f"Error: {e}")
             import traceback
