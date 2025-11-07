@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 
 DB_PATH = "data.db"
 
@@ -27,7 +27,7 @@ def add_reading(sensor_type: str, value: float):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    timestamp = datetime.now(datetime.timezone.utc).isoformat() + 'Z'
+    timestamp = datetime.now(timezone.utc).isoformat() + 'Z'
 
     cursor.execute("""
         INSERT INTO sensor_readings (sensor_type, value, timestamp)
