@@ -61,8 +61,9 @@ def get_cpu_temperature():
     f = round(c * 9/5 + 32, 1)
 
     return {
-        "cpu_temperature_c": c,
-        "cpu_temperature_f": f,
+        "sensor": reading["sensor"],
+        "temperature_c": c,
+        "temperature_f": f,
         "timestamp": reading["timestamp"]
     }
 
