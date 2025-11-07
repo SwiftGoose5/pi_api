@@ -126,6 +126,21 @@ def get_am2302_temperature_history(unit: str = "f", limit: int = 10):
         "readings": readings
     }
 
+@app.get("/am2302/humidity/")
+def get_am2302_humidity():
+    reading = get_latest_reading("am2302_humidity")
+
+    if not reading:
+        return {"error": "No humidity reading found"}
+    
+    humidity = reading["value"]
+    
+    return {
+        "sensor": reading["sensor"],
+        "humidity": humidity,
+        "timestamp": reading["timestamp"]
+    }
+
 @app.post("/log")
 def log_message(message: str, api_key: str = Security(verify_api_key)):
     add_reading("log_message", 0.0)  # We'll improve this later
