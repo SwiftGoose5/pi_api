@@ -41,17 +41,13 @@ try:
         humidity, temperature = Adafruit_DHT.read_retry(SENSOR, PIN, retries=15, delay_seconds=INTERVAL)
 
         if humidity is not None and temperature is not None:
-            f = round(temperature * 9/5 + 32, 1)
-            h = round(humidity, 1)
-            print(f"SUCCESS - Temp: {f}°F | Humidity: {h}%")
-            add_reading("am2302_temperature", f)
-            add_reading("am2302_humidity", h)
+            temp_c = round(temperature, 1)
+            hum = round(humidity, 1)
+            print(f"SUCCESS - Temp: {temp_c}°C | Humidity: {hum}%")
+            add_reading("am2302_temperature", temp_c)
+            add_reading("am2302_humidity", hum)
         else:
             print("FAILED - No data returned from sensor")
 
         time.sleep(INTERVAL)
 
-except KeyboardInterrupt:
-    print("\nStopping sensor readings...")
-except Exception as e:
-    print(f"Error: {e}")

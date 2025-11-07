@@ -37,7 +37,7 @@ def add_reading(sensor_type: str, value: float):
     conn.commit()
     conn.close()
 
-def get_single_reading(sensor_type: str):
+def get_latest_reading(sensor_type: str):
     """Get single reading for a sensor"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -60,7 +60,7 @@ def get_single_reading(sensor_type: str):
     else:
         return None
 
-def get_recent_readings(sensor_type: str, limit: int = 10) -> list[dict]:
+def get_readings(sensor_type: str, unit: str = "f", limit: int = 10) -> list[dict]:
     """Get recent readings for a sensor (latest first)"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -75,6 +75,12 @@ def get_recent_readings(sensor_type: str, limit: int = 10) -> list[dict]:
 
     results = cursor.fetchall()
     conn.close()
+
+    if unit == "f":
+        return [
+            {"value": round(r[0] * 9/5 + 32, 1), "timestamp": r[1]}
+            for r in results
+        ]
 
     return [
         {"value": round(r[0], 1), "timestamp": r[1]}

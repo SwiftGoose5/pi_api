@@ -31,8 +31,7 @@ def get_cpu_temp_f():
     with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
         temp_millidegrees = int(f.read().strip())
     temp_c = temp_millidegrees / 1000.0
-    temp_f = round(temp_c * 9/5 + 32, 1)
-    return temp_f
+    return temp_c
 
 if __name__ == "__main__":
     print("Starting CPU temperature logger...")
